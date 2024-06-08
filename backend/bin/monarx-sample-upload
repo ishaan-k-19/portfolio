@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+# =================================
+# Title        : monarx_sample_upload.sh
+# Description  : Upload a sample file to monarx.com
+# Author       : support@monarx.com
+# =================================
+set -eo pipefail
+
+display_usage() {
+  cat << EOL
+Upload a sample file to monarx.com for analysis.
+
+Usage:
+  $0 <path> [--note value]
+
+Options:
+  -n | --note   Optional free form note to include with submission
+EOL
+}
+
+
+# Defaults
+UPLOAD_URL=https://api.monarx.com/v1/file/upload/sample
+CURL_EXECUTABLE=$(command -v curl &2>/dev/null)
+GZIP_EXECUTABLE=$(command -v gzip &2>/dev/null)
+FILE_PATH=$1
+NOTE=$(cat <<NOTE
+Sample upload (EID: xxx)
+NOTE
+)
+
+
+# Assert dependencies
+if [[ ! -x "${CURL_EXECUTABLE}" ]]; then
+  echo 'Error: curl is not installed' >&2
+  exit 1
+fi
+
+if [[ ! -x "${GZIP_EXECUTABLE}" ]]; then
+  echo 'Error: gzip is not installed' >&2
+  exit 1
+fi
+
+
+# Validate required arguments
+if [[ -z "${FILE_PATH}" ]]; then
+  display_usage
+  exit 1
+fi
+
+if [[ ! -f "${FILE_PATH}" ]]; then
+  echo -e "Error: File path to upload does not exist\n"
+  display_usage
+  exit 1
+fi
+
+shift # Past required argument
+
+
+# Parse optional arguments
+while [[ $# -gt 0 ]]
+do
+  key="$1"
+
+  case $key in
+    -n|--note)
+      NOTE="${NOTE}\n\n$2"
+      shift # past argument
+      shift # past value
+      ;;
+    *)
+      echo "Error: Unknown option (${key})"
+      display_usage
+      exit 1
+      ;;
+  esac
+done
+
+
+${GZIP_EXECUTABLE} -c "${FILE_PATH}" | ${CURL_EXECUTABLE} --disable --silent --show-error \
+  --fail --max-time 30 --form "file=@-;type=application/gzip" --form "note=${NOTE}" "${UPLOAD_URL}" \
+  && echo "Sample uploaded successfully" \
+  || echo "Error uploading sample"
+

@@ -11,13 +11,13 @@ const Contact = () => {
   });
 
   const handleClick = async () => {
-    await fetch("http://localhost:3000/submit", {
+    alert("Form Submitted!")
+    await fetch("http://localhost:8080/submit", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...form }),
     });
     setForm({ fname: "", lname: "", email: "", phone: "", message: "" });
-    alert("Form Submitted!")
   };
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -41,7 +41,7 @@ const Contact = () => {
               required
             />
             <label
-              for="fname"
+              htmlFor="fname"
               className="peer-focus:font-medium absolute text-sm lg:text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-orange-600 peer-focus:dark:text-orange-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               First name
@@ -59,7 +59,7 @@ const Contact = () => {
               required
             />
             <label
-              for="lname"
+              htmlFor="lname"
               className="peer-focus:font-medium absolute text-sm lg:text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-orange-600 peer-focus:dark:text-orange-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
             >
               Last name
@@ -78,7 +78,7 @@ const Contact = () => {
             required
           />
           <label
-            for="email"
+            htmlFor="email"
             className="peer-focus:font-medium absolute text-sm lg:text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-orange-600 peer-focus:dark:text-orange-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Email address
@@ -95,7 +95,7 @@ const Contact = () => {
             onChange={handleChange}
           />
           <label
-            for="phone"
+            htmlFor="phone"
             className="peer-focus:font-medium absolute text-sm lg:text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-orange-600 peer-focus:dark:text-orange-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Phone number (Optional)
@@ -112,7 +112,7 @@ const Contact = () => {
             onChange={handleChange}
           />
           <label
-            for="message"
+            htmlFor="message"
             className="peer-focus:font-medium absolute text-sm lg:text-lg text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-orange-600 peer-focus:dark:text-orange-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
           >
             Message
@@ -122,7 +122,12 @@ const Contact = () => {
           type="submit"
           onClick={handleClick}
           className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 font-medium rounded-lg text-sm lg:text-lg w-full sm:w-auto px-8 py-2.5 text-center dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800 my-5 disabled:bg-orange-300"
-          disabled={form.fname?.length < 1 || form.lname?.length < 1 || form.message?.length < 1 || form.email?.length < 10}
+          disabled={
+            form.fname?.length < 1 ||
+            form.lname?.length < 1 ||
+            form.message?.length < 1 ||
+            form.email?.length < 10
+          }
         >
           Submit
         </button>
